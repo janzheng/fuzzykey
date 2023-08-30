@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "name": "fuzzykey",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Cloudflare Worker simple KV store lister + getter",
+  "main": "./index.js",
+  "scripts": {
+    "batcher": "node --experimental-json-modules batcher.js",
+    "dev": "wrangler dev --remote",
+    "devnote": "sometimes wrangler dev will fail for Buckets, and you have to do --remote. No idea why",
+    "preview": "wrangler preview",
+    "deploy": "wrangler deploy",
+    "prod": "wrangler deploy",
+    "commit": "git add . -A ; git commit ; git push origin main; ",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '**/*.{js,css,json,md}'"
+  },
+  "author": "Jan Zheng",
+  "license": "MIT",
+  "devDependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.400.0",
+    "async-sema": "^3.1.1",
+    "ipfs-only-hash": "^4.0.0",
+    "jszip": "^3.10.1",
+    "nanoid": "^4.0.0",
+    "prettier": "^1.18.2",
+    "wrangler": "^3.6.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.400.0"
+  }
+}
