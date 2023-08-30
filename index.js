@@ -1,7 +1,7 @@
 
 import { handleOptions, authorizeRequest } from './lib/cors-handler.js'
 // import { downloadFileBuf } from './lib/helpers.js'
-import { getHandler, postHandler, deleteHandler } from './lib/v1-handlers.js'
+import { getHandler, postHandler, deleteHandler } from './lib/fuzzykey-handlers.js'
 
 
 addEventListener('fetch', (event, env) => {
