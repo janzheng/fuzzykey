@@ -5,7 +5,11 @@ import { getHandler, postHandler, deleteHandler } from './lib/v1-handlers.js'
 
 
 addEventListener('fetch', (event, env) => {
-  event.respondWith(handleRequest(event.request))
+  try {
+    event.respondWith(handleRequest(event.request))
+  } catch(e) {
+    console.error('[fetchListener error]:', e)
+  }
 })
 
 async function handleRequest(request, env) {
@@ -14,6 +18,7 @@ async function handleRequest(request, env) {
   let key = url.pathname.slice(1);
 
   if (!authorizeRequest(request, key)) {
+    console.log('**** FORBIDDEN ****')
     return new Response('Forbidden', { status: 403 });
   }
 
@@ -35,6 +40,7 @@ async function handleRequest(request, env) {
       return await deleteHandler(request);
 
     default:
+      console.log('**** Method not handled:', request.method)
       return new Response('Method Not Allowed', {
         status: 405,
         headers: {
@@ -43,5 +49,7 @@ async function handleRequest(request, env) {
       });
   }
 
+
+  console.log('????')
 }
 
