@@ -133,7 +133,7 @@ Contributions to Fuzzykey are welcome. Please make sure to read the Contributing
 
 Thank you to all the people who already contributed to Fuzzykey!
 
-## TTL expiration (local fix, unreleased)
+## TTL expiration (deployed 2026-09-07)
 
 POST writes now apply `ttl` through KV's `expirationTtl`, in addition to retaining
 `metadata.ttl`. TTL must be an integer number of seconds >=60. If omitted, the
@@ -154,3 +154,20 @@ Worker deployment. Rollout and a disposable-key expiration check are tracked in
 Coverflow callers must supply the verified deployment as `baseUrl` and explicitly
 set `ttlSupported: true` to use a TTL. Do this only after deploying and verifying
 this fix; setting the flag does not upgrade or inspect the remote service.
+
+
+The deployment at `https://fuzzykey.yawnxyz.workers.dev` was verified on 2026-09-07:
+a disposable key with TTL 60 was readable immediately and absent at 78 seconds.
+Coverflow settings for this verified deployment:
+
+```json
+{
+  "baseUrl": "https://fuzzykey.yawnxyz.workers.dev",
+  "ttlSupported": true,
+  "key": "example-cache-entry",
+  "value": { "example": true },
+  "ttl": 3600
+}
+```
+
+See [RUNLOG.md](RUNLOG.md) for the deployed version and validation limits.

@@ -23,3 +23,30 @@ Started interactive `wrangler login` for the user to authorize in their browser.
 No Worker deployment has occurred. The checkout has only a placeholder
 `wrangler.toml.example`; recover and verify the existing Worker's binding/config
 before deploying, rather than creating a new KV namespace. FK003 remains open.
+
+
+## 2026-09-07 — Production deployment and live TTL verification
+
+- Authentication renewed successfully after two expired two-minute login attempts.
+- Recovered the existing Worker's settings through the Cloudflare API. Kept its
+  `FUZZYKEY` KV namespace and compatibility date `2022-08-04`; created no namespace.
+  Local `wrangler.toml` is ignored, matching this repository's configuration policy.
+- `wrangler init --from-dash` unexpectedly created a starter in `/tmp/fuzzykey`;
+  that starter was not deployed. Used the authoritative API settings instead.
+- `npx --yes wrangler@4.129.1 deploy --dry-run` passed, then `deploy` succeeded.
+  Source fix `5a4acb4`, checkout `2acad29`; deployed version
+  `3b4861f3-2e20-4c2f-a0fa-f80eb33a0dc3` at
+  `https://fuzzykey.yawnxyz.workers.dev`.
+- Previous version for rollback: `dcd6ca4b-5815-44bc-bd9d-f4b5d55e137d`.
+- Live curl check: TTL 59 returned HTTP 400 / `FUZZYKEY_INVALID_TTL`.
+  A unique disposable key with TTL 60 was readable immediately after its POST,
+  then absent (value and metadata null) at 78 seconds. It expired naturally;
+  no existing data was modified. An initial urllib probe returned a non-JSON
+  HTTP error before any valid write; curl completed the checks.
+- Coverflow examples now use the verified endpoint with explicit
+  `ttlSupported: true`. Other deployments remain unverified; existing flows were
+  not rewritten. The eight-hour default was covered locally, not by an eight-hour
+  live wait. KV propagation across all regions was not tested.
+
+FK003 is complete. Production now applies TTL to new/overwritten keys, including
+omitted TTL's eight-hour default. Older keys were not migrated.
