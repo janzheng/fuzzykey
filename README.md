@@ -132,3 +132,25 @@ DEALINGS IN THE SOFTWARE.
 Contributions to Fuzzykey are welcome. Please make sure to read the Contributing Guide before making a pull request.
 
 Thank you to all the people who already contributed to Fuzzykey!
+
+## TTL expiration (local fix, unreleased)
+
+POST writes now apply `ttl` through KV's `expirationTtl`, in addition to retaining
+`metadata.ttl`. TTL must be an integer number of seconds >=60. If omitted, the
+existing default of 28,800 seconds (eight hours) now actually expires the key.
+Invalid TTL returns HTTP 400 with `code: "FUZZYKEY_INVALID_TTL"` before writing;
+a failed KV write returns HTTP 500 with `code: "FUZZYKEY_WRITE_FAILED"`.
+
+This affects new writes and overwrites after deployment. Existing stored keys
+are not retroactively expired. Overwriting a key restarts its expiration period.
+Review callers that omit TTL before rollout: their newly written data will no
+longer be retained indefinitely. Metadata from an older deployment does not
+prove expiration is active.
+
+Run `npm test` for local handler/KV contract tests. These do not certify a live
+Worker deployment. Rollout and a disposable-key expiration check are tracked in
+[TASKS.md](TASKS.md). See the [implementation brief](.brief/ttl-expiration.done.md).
+
+Coverflow callers must supply the verified deployment as `baseUrl` and explicitly
+set `ttlSupported: true` to use a TTL. Do this only after deploying and verifying
+this fix; setting the flag does not upgrade or inspect the remote service.
