@@ -8,3 +8,12 @@ Additive GET routes provide stable value and pagination contracts while leaving 
 - Rollout is deliberately separate. Coverflow callers require an explicit base URL and reject non-v2 response shapes, so they cannot silently use the deployed legacy endpoint.
 
 Source contract: Cloudflare Workers KV binding documentation for `get()` and `list()`.
+
+
+## Rollout completed — 2026-09-08
+
+`codex-integration-rollout-20260908` deployed source `85149fe` as Worker version
+`6b29e9e3-98fa-48b4-aa76-f6020f7021db`. Nine local tests and four live read-only
+checks pass, including actual Coverflow consumers. Use
+`https://fuzzykey.yawnxyz.workers.dev` as the explicit v2 base URL. See RUNLOG.md
+for evidence and limits. No legacy data was migrated.

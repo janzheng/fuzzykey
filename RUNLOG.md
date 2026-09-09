@@ -53,3 +53,30 @@ omitted TTL's eight-hour default. Older keys were not migrated.
 ## 2026-09-08 — Versioned read and cursor-list qualification
 
 Added opt-in `/v2/read` and `/v2/list` handlers without changing the legacy routes or deploying. Recording KV fixtures establish that raw missing `null` is distinct from stored JSON `null`, JSON booleans and numbers retain their types, and a list request passes one bounded page with its opaque cursor. `npm test` passes 9 tests. Coverflow separately requires an explicit v2 deployment URL and rejects legacy response shapes. Reads remain under the current unauthenticated policy; scope prefixes are not isolation boundaries. [Implementation brief](.brief/v2-read-list.md).
+
+
+## 2026-09-08 — Fuzzykey v2 production rollout
+
+Owner: `codex-integration-rollout-20260908`. User authorized remaining integration
+rollouts and explicit task ownership. Source commit `85149fe` pushed to main before
+deployment. Existing Worker/binding/config retained; no namespace or stored-data
+migration. Wrangler 4.129.1 authenticated; dry-run bundle passed (9.75 KiB).
+
+- `npm test`: nine pass. Value primitives, stored-null versus missing and cursor
+  passthrough are fixture-qualified. `/tmp/fuzzykey-v2-rollout-tests.log`.
+- Production deployed successfully at `https://fuzzykey.yawnxyz.workers.dev`,
+  version `6b29e9e3-98fa-48b4-aa76-f6020f7021db`.
+  Previous version: `3b4861f3-2e20-4c2f-a0fa-f80eb33a0dc3`.
+  `/tmp/fuzzykey-v2-deploy.log`.
+- Actual Coverflow `getValue` returned the v2 missing envelope; `listPage` returned
+  the v2 empty page for a unique unused scope. Legacy root GET retained its exact
+  `{status:false,key}` missing shape; invalid v2 limit returned 400.
+  `/tmp/cf-fuzzykey-v2-live.log`. An initial verification incorrectly expected the
+  legacy missing result to contain value:null; source inspection corrected the
+  assertion, with no code or deployment change.
+- Live probes were read-only and used random nonexistent selectors. No records
+  were created/deleted/read from existing scopes. Stored primitive and nonempty
+  cursor behavior remain fixture evidence, not a live-write qualification.
+
+FK004 is complete. Callers must still opt in with the explicit v2 base URL; v1
+behavior and unauthenticated prefix semantics remain unchanged.

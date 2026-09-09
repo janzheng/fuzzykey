@@ -6,4 +6,4 @@
 
 Validation: six handler tests pass; see [RUNLOG.md](RUNLOG.md). Live deployment and expiration check passed; details in RUNLOG.
 
-- [@codex-integration-rollout-20260908] [in progress 2026-09-08; rollout authorized] FK004 Deploy and fixture-verify the additive v2 read/list API. Implementation and local contracts are in [the v2 brief](.brief/v2-read-list.md). Owned by Coverflow session `codex-integration-rollout-20260908`; deployment and live verification pending; reads remain unauthenticated and scopes are key prefixes, not isolation boundaries.
+- [x] [completed 2026-09-08 by codex-integration-rollout-20260908] FK004 Deploy and fixture-verify the additive v2 read/list API. Implementation and local contracts are in [the v2 brief](.brief/v2-read-list.md). Source `85149fe` pushed to main; Worker version `6b29e9e3-98fa-48b4-aa76-f6020f7021db` deployed and verified through actual Coverflow v2 consumers; reads remain unauthenticated and scopes are key prefixes, not isolation boundaries.
