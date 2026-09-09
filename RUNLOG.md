@@ -50,3 +50,6 @@ before deploying, rather than creating a new KV namespace. FK003 remains open.
 
 FK003 is complete. Production now applies TTL to new/overwritten keys, including
 omitted TTL's eight-hour default. Older keys were not migrated.
+## 2026-09-08 — Versioned read and cursor-list qualification
+
+Added opt-in `/v2/read` and `/v2/list` handlers without changing the legacy routes or deploying. Recording KV fixtures establish that raw missing `null` is distinct from stored JSON `null`, JSON booleans and numbers retain their types, and a list request passes one bounded page with its opaque cursor. `npm test` passes 9 tests. Coverflow separately requires an explicit v2 deployment URL and rejects legacy response shapes. Reads remain under the current unauthenticated policy; scope prefixes are not isolation boundaries. [Implementation brief](.brief/v2-read-list.md).

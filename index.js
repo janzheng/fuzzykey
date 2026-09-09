@@ -1,7 +1,7 @@
 
 import { handleOptions, authorizeRequest } from './lib/cors-handler.js'
 // import { downloadFileBuf } from './lib/helpers.js'
-import { getHandler, postHandler, deleteHandler } from './lib/fuzzykey-handlers.js'
+import { getHandler, postHandler, deleteHandler, getV2Handler, listV2Handler } from './lib/fuzzykey-handlers.js'
 
 
 addEventListener('fetch', (event, env) => {
@@ -21,6 +21,9 @@ async function handleRequest(request, env) {
     console.log('**** FORBIDDEN ****')
     return new Response('Forbidden', { status: 403 });
   }
+
+  if (request.method === 'GET' && url.pathname === '/v2/read') return getV2Handler(request);
+  if (request.method === 'GET' && url.pathname === '/v2/list') return listV2Handler(request);
 
   switch (request.method) {
 
@@ -52,4 +55,3 @@ async function handleRequest(request, env) {
 
   console.log('????')
 }
-
